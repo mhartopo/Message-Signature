@@ -19,7 +19,7 @@ public class MBCipher {
 	public byte[] encrypt(byte[] text, byte[] key) {
 		byte[] newText = completeBlock(text);
 		byte[] newKey = completeKey(key);
-		byte[][] blocks = bytesToBlocks(text,16);
+		byte[][] blocks = bytesToBlocks(newText,16);
 		ByteBuffer buffer = ByteBuffer.allocate(newText.length);
 		for(int i = 0; i < blocks.length; i++) {
 			byte[] encBlock = encryptBlock(blocks[i], newKey);
@@ -197,8 +197,9 @@ public class MBCipher {
 			for(i = 0; i < text.length; i++) {
 				newText[i] = text[i];
 			}
+			char c = ' ';
 			while(i < newText.length) {
-				newText[i] = 0;
+				newText[i] = (byte) (c & 0xFF);
 				i++;
 			}
 			return newText;
