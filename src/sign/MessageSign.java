@@ -1,5 +1,11 @@
 package sign;
 
+import java.security.Security;
+
+import org.bouncycastle.crypto.digests.SHA1Digest;
+import org.bouncycastle.jcajce.provider.digest.SHA1;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
 public class MessageSign {
 	private String message;
 	private String sign;
@@ -29,5 +35,9 @@ public class MessageSign {
 	public String toString() {
 		String res = message + "\n" + "<ds>" + sign + "</ds>";
 		return res;
+	}
+	
+	public static void main(String[] args) {
+		
 	}
 }
