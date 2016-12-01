@@ -38,7 +38,19 @@ public class MBCipher {
 			byte[] decBlock = decryptBlock(blocks[i], newKey);
 			buffer.put(decBlock);
 		}
-		return buffer.array();
+		return sanitize(buffer.array());
+	}
+	
+	private byte[] sanitize(byte[] input) {
+		int i = input.length -1;
+		while(i >= 0 && input[i] == 0) {
+			i--;
+		}
+		byte[] out = new byte[i+1];
+		for(i = 0; i< out.length; i++) {
+			out[i] = input[i];
+		}
+		return out;
 	}
 	
 	public byte[] encryptBlock(byte[] text, byte[] key) {
@@ -197,9 +209,9 @@ public class MBCipher {
 			for(i = 0; i < text.length; i++) {
 				newText[i] = text[i];
 			}
-			char c = ' ';
+			
 			while(i < newText.length) {
-				newText[i] = (byte) (c & 0xFF);
+				newText[i] = 0;
 				i++;
 			}
 			return newText;
