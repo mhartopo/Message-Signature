@@ -20,10 +20,10 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Date;
 import java.sql.Timestamp;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.jce.spec.ECParameterSpec;
-import org.bouncycastle.math.ec.ECCurve;
-import org.bouncycastle.util.encoders.Hex;
+import org.spongycastle.jce.provider.*;
+import org.spongycastle.jce.spec.ECParameterSpec;
+import org.spongycastle.math.ec.ECCurve;
+import org.spongycastle.util.encoders.Hex;
 
 import hash.SHA1;
 import utils.HexUtil;
@@ -35,8 +35,12 @@ public class EcdsaSign {
     private KeyPairGenerator g;
     private KeyFactory f;
     
+    static {
+        Security.insertProviderAt(new BouncyCastleProvider(), 1);
+    }
+    
     public EcdsaSign() {
-    	Security.addProvider(new BouncyCastleProvider());
+    	
     }
     
 	public static void GetTimestamp(String info){
@@ -45,7 +49,7 @@ public class EcdsaSign {
 	
 	public byte[] generateSignature(String plaintext) throws SignatureException, UnsupportedEncodingException, InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException{
 		SHA1 sha = new SHA1();
-		Signature ecdsaSign = Signature.getInstance("SHA1withECDSA", "BC");
+		Signature ecdsaSign = Signature.getInstance("SHA1withECDSA", "SC");
 		ecdsaSign.initSign(keyPair.getPrivate());
 		ecdsaSign.update(plaintext.getBytes("UTF-8"));
 		byte[] signature = ecdsaSign.sign();
@@ -80,7 +84,7 @@ public class EcdsaSign {
 	
 	public boolean validateSignature(String plaintext, byte[] publicKey, byte[] signature) throws SignatureException, InvalidKeyException, UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException{
 		SHA1 sha = new SHA1();
-		Signature ecdsaVerify = Signature.getInstance("SHA1withECDSA", "BC");
+		Signature ecdsaVerify = Signature.getInstance("SHA1withECDSA", "SC");
 		X509EncodedKeySpec pub_format = new  X509EncodedKeySpec(publicKey);
 		PublicKey pub = f.generatePublic(pub_format);
 		ecdsaVerify.initVerify(pub);
@@ -97,9 +101,9 @@ public class EcdsaSign {
                 curve,
                 curve.decodePoint(Hex.decode("020ffa963cdca8816ccc33b8642bedf905c3d358573d3f27fbbd3b3cb9aaaf")), // G
                 new BigInteger("883423532389192164791648750360308884807550341691627752275345424702807307")); // n
-    	g = KeyPairGenerator.getInstance("ECDSA", "BC");
+    	g = KeyPairGenerator.getInstance("ECDSA", "SC");
     	g.initialize(spec, new SecureRandom());
-    	f = KeyFactory.getInstance("ECDSA", "BC");
+    	f = KeyFactory.getInstance("ECDSA", "SC");
     	keyPair = g.generateKeyPair();
 	}
 	
@@ -112,9 +116,9 @@ public class EcdsaSign {
                 curve,
                 curve.decodePoint(Hex.decode("020ffa963cdca8816ccc33b8642bedf905c3d358573d3f27fbbd3b3cb9aaaf")), // G
                 new BigInteger("883423532389192164791648750360308884807550341691627752275345424702807307")); // n
-    	g = KeyPairGenerator.getInstance("ECDSA", "BC");
+    	g = KeyPairGenerator.getInstance("ECDSA", "SC");
     	g.initialize(spec, new SecureRandom());
-    	f = KeyFactory.getInstance("ECDSA", "BC");
+    	f = KeyFactory.getInstance("ECDSA", "SC");
     	
     	byte[] bpriv = new BigInteger(hexpriv,16).toByteArray();
     	byte[] bpub = new BigInteger(hexpub,16).toByteArray();

@@ -2,9 +2,9 @@ package sign;
 
 import java.security.Security;
 
-import org.bouncycastle.crypto.digests.SHA1Digest;
-import org.bouncycastle.jcajce.provider.digest.SHA1;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.spongycastle.crypto.digests.SHA1Digest;
+import org.spongycastle.jcajce.provider.digest.SHA1;
+import org.spongycastle.jce.provider.BouncyCastleProvider;
 
 public class MessageSign {
 	private String message;
